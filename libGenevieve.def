@@ -1,0 +1,19 @@
+LIBRARY "d3d9"
+DESCRIPTION "D3D9 Definition File"
+EXPORTS
+
+D3DPERF_BeginEvent                              = D3DPERF_BeginEvent                           @20
+D3DPERF_EndEvent                                = D3DPERF_EndEvent                             @21
+D3DPERF_GetStatus                               = D3DPERF_GetStatus                            @22
+D3DPERF_QueryRepeatFrame                        = D3DPERF_QueryRepeatFrame                     @23
+D3DPERF_SetMarker                               = D3DPERF_SetMarker                            @24
+D3DPERF_SetOptions                              = D3DPERF_SetOptions                           @25
+D3DPERF_SetRegion                               = D3DPERF_SetRegion                            @26
+DebugSetLevel                                   = DebugSetLevel                                @27
+DebugSetMute                                    = DebugSetMute                                 @28
+Direct3D9EnableMaximizedWindowedModeShim        = Direct3D9EnableMaximizedWindowedModeShim     @29
+Direct3DCreate9                                 = Direct3DCreate9                              @30
+Direct3DCreate9Ex                               = Direct3DCreate9Ex                            @31
+Direct3DShaderValidatorCreate9                  = Direct3DShaderValidatorCreate9               @17
+PSGPError                                       = PSGPError                                    @18
+PSGPSampleTexture                               = PSGPSampleTexture                            @19

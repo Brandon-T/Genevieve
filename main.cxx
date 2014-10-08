@@ -1,6 +1,7 @@
 #include "Memory.hxx"
 #include "Graphics.hxx"
 #include "Math.hxx"
+#include "Export.hxx"
 
 #include <fstream>
 #include <memory>
@@ -152,6 +153,7 @@ bool SaveTexture(IDirect3DDevice9* pDevice, const char* path)
 
 __attribute__((constructor)) void __load()
 {
+    Initialise();
 }
 
 __attribute__((destructor)) void __unload()

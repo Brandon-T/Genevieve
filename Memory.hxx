@@ -32,6 +32,12 @@ public:
 
     template<typename R, typename... Args>
     R Call(void* func, Args... args);
+
+    template<typename... Args>
+    void Call(FARPROC func, Args... args);
+
+    template<typename R, typename... Args>
+    R Call(FARPROC func, Args... args);
 };
 
 template<typename T>
@@ -55,6 +61,18 @@ void Module::Call(void* func, Args... args)
 
 template<typename R, typename... Args>
 R Module::Call(void* func, Args... args)
+{
+    return reinterpret_cast<R (__stdcall *)(Args...)>(func)(args...);
+}
+
+template<typename... Args>
+void Module::Call(FARPROC func, Args... args)
+{
+    return reinterpret_cast<void (__stdcall *)(Args...)>(func)(args...);
+}
+
+template<typename R, typename... Args>
+R Module::Call(FARPROC func, Args... args)
 {
     return reinterpret_cast<R (__stdcall *)(Args...)>(func)(args...);
 }

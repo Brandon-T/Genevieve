@@ -22,7 +22,6 @@ struct d3d_dll
 
 bool Initialise()
 {
-    MessageBox(NULL, "HERE", "", 0);
     char Root[MAX_PATH];
     GetSystemDirectoryA(Root, MAX_PATH);
     #ifdef _MSC_VER
@@ -67,6 +66,140 @@ bool Initialise()
     return false;
 }
 
+#ifndef NO_ASM
+void __stdcall DX_D3DPERF_BeginEvent()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.D3DPERF_BeginEvent]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.D3DPERF_BeginEvent):);
+    #endif
+}
+
+void __stdcall DX_D3DPERF_EndEvent()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.D3DPERF_EndEvent]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.D3DPERF_EndEvent):);
+    #endif
+}
+
+void __stdcall DX_D3DPERF_GetStatus()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.D3DPERF_GetStatus]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.D3DPERF_GetStatus):);
+    #endif
+}
+
+void __stdcall DX_D3DPERF_QueryRepeatFrame()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.D3DPERF_QueryRepeatFrame]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.D3DPERF_QueryRepeatFrame):);
+    #endif
+}
+
+void __stdcall DX_D3DPERF_SetMarker()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.D3DPERF_SetMarker]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.D3DPERF_SetMarker):);
+    #endif
+}
+
+void __stdcall DX_D3DPERF_SetOptions()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.D3DPERF_SetOptions]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.D3DPERF_SetOptions):);
+    #endif
+}
+
+void __stdcall DX_D3DPERF_SetRegion()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.D3DPERF_SetRegion]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.D3DPERF_SetRegion):);
+    #endif
+}
+
+void __stdcall DX_DebugSetLevel()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.DebugSetLevel]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.DebugSetLevel):);
+    #endif
+}
+
+void __stdcall DX_DebugSetMute()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.DebugSetMute]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.DebugSetMute):);
+    #endif
+}
+
+void __stdcall DX_Direct3D9EnableMaximizedWindowedModeShim()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.Direct3D9EnableMaximizedWindowedModeShim]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.Direct3D9EnableMaximizedWindowedModeShim):);
+    #endif
+}
+
+IDirect3D9* __stdcall DX_Direct3DCreate9(UINT SDKVersion)
+{
+    typedef IDirect3D9* (__stdcall *D3D9_Type) (UINT SDKVersion);
+    IDirect3D9* pOriginal = (reinterpret_cast<D3D9_Type>(d3d.Direct3DCreate9))(SDKVersion);
+    return new IDirect3D9Proxy(pOriginal);
+}
+
+void __stdcall DX_Direct3DCreate9Ex()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.Direct3DCreate9Ex]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.Direct3DCreate9Ex):);
+    #endif
+}
+
+void __stdcall DX_Direct3DShaderValidatorCreate9()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.Direct3DShaderValidatorCreate9]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.Direct3DShaderValidatorCreate9):);
+    #endif
+}
+
+void __stdcall DX_PSGPError()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.PSGPError]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.PSGPError):);
+    #endif
+}
+
+void __stdcall DX_PSGPSampleTexture()
+{
+    #ifdef _MSC_VER
+    _asm{jmp[d3d.PSGPSampleTexture]}
+    #else
+    __asm("jmp *%0":: "r" (d3d.PSGPSampleTexture):);
+    #endif
+}
+#else
 #ifndef _MSV_VER
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wattributes"
@@ -148,4 +281,5 @@ void __stdcall PSGPSampleTexture()
 }
 #ifndef _MSV_VER
 #pragma GCC diagnostic pop
+#endif
 #endif

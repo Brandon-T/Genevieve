@@ -2,12 +2,14 @@
 #define DIRECT3DDEVICE9PROXY_HXX_INCLUDED
 
 #include <d3d9.h>
+#include "IDirect3DTexture9Proxy.hxx"
+#include "IDirect3DSwapChain9Proxy.hxx"
+#include "IDirect3DBaseTexture9Proxy.hxx"
 
 class IDirect3DDevice9Proxy : public IDirect3DDevice9
 {
     private:
-        IDirect3DDevice9* ptr_Direct3DDevice9;
-        IDirect3D9* Direct3D9;
+        IDirect3DDevice9* pOriginal;
 
     public:
         IDirect3DDevice9Proxy(IDirect3DDevice9* pOriginal);

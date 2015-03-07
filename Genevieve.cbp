@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/Genevieve" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/d3d9" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -16,9 +16,16 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
+					<Add option="-m32" />
 					<Add option="-DBUILD_DLL" />
 				</Compiler>
 				<Linker>
+					<Add option="-m32" />
+					<Add option="-static" />
+					<Add option="-static-libgcc" />
+					<Add option="-static-libstdc++" />
+					<Add option="-Wl,--enable-stdcall-fixup" />
+					<Add option="-Wl,--kill-at -d --input-def libGenevieve.def" />
 					<Add library="user32" />
 					<Add library="d3dx9" />
 					<Add library="gdi32" />
@@ -32,26 +39,47 @@
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
-					<Add option="-Wall" />
-					<Add option="-DBUILD_DLL" />
 					<Add option="-O2" />
+					<Add option="-std=c++11" />
+					<Add option="-Wall" />
+					<Add option="-m32" />
+					<Add option="-DBUILD_DLL" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-m32" />
+					<Add option="-static" />
+					<Add option="-static-libgcc" />
+					<Add option="-static-libstdc++" />
+					<Add option="-Wl,--enable-stdcall-fixup" />
+					<Add option="-Wl,--kill-at -d --input-def libGenevieve.def" />
 					<Add library="user32" />
+					<Add library="d3dx9" />
+					<Add library="gdi32" />
 				</Linker>
 			</Target>
 		</Build>
+		<Unit filename="Console.cxx" />
+		<Unit filename="Console.hxx" />
+		<Unit filename="Export.cxx" />
+		<Unit filename="Export.hxx" />
 		<Unit filename="Graphics.cxx" />
 		<Unit filename="Graphics.hxx" />
 		<Unit filename="IDirect3D9Proxy.cxx" />
 		<Unit filename="IDirect3D9Proxy.hxx" />
+		<Unit filename="IDirect3DBaseTexture9Proxy.cxx" />
+		<Unit filename="IDirect3DBaseTexture9Proxy.hxx" />
 		<Unit filename="IDirect3DDevice9Proxy.cxx" />
 		<Unit filename="IDirect3DDevice9Proxy.hxx" />
+		<Unit filename="IDirect3DSwapChain9Proxy.cxx" />
+		<Unit filename="IDirect3DSwapChain9Proxy.hxx" />
+		<Unit filename="IDirect3DTexture9Proxy.cxx" />
+		<Unit filename="IDirect3DTexture9Proxy.hxx" />
 		<Unit filename="Math.cxx" />
 		<Unit filename="Math.hxx" />
 		<Unit filename="Memory.hxx" />
-		<Unit filename="main.cpp" />
+		<Unit filename="libGenevieve.def" />
+		<Unit filename="main.cxx" />
 		<Extensions>
 			<code_completion />
 			<envvars />

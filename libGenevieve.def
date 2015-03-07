@@ -2,18 +2,18 @@ LIBRARY "d3d9"
 DESCRIPTION "D3D9 Definition File"
 EXPORTS
 
-D3DPERF_BeginEvent                              = D3DPERF_BeginEvent                           @20
-D3DPERF_EndEvent                                = D3DPERF_EndEvent                             @21
-D3DPERF_GetStatus                               = D3DPERF_GetStatus                            @22
-D3DPERF_QueryRepeatFrame                        = D3DPERF_QueryRepeatFrame                     @23
-D3DPERF_SetMarker                               = D3DPERF_SetMarker                            @24
-D3DPERF_SetOptions                              = D3DPERF_SetOptions                           @25
-D3DPERF_SetRegion                               = D3DPERF_SetRegion                            @26
-DebugSetLevel                                   = DebugSetLevel                                @27
-DebugSetMute                                    = DebugSetMute                                 @28
-Direct3D9EnableMaximizedWindowedModeShim        = Direct3D9EnableMaximizedWindowedModeShim     @29
-Direct3DCreate9                                 = Direct3DCreate9                              @30
-Direct3DCreate9Ex                               = Direct3DCreate9Ex                            @31
-Direct3DShaderValidatorCreate9                  = Direct3DShaderValidatorCreate9               @17
-PSGPError                                       = PSGPError                                    @18
-PSGPSampleTexture                               = PSGPSampleTexture                            @19
+D3DPERF_BeginEvent                              = DX_D3DPERF_BeginEvent                           @20
+D3DPERF_EndEvent                                = DX_D3DPERF_EndEvent                             @21
+D3DPERF_GetStatus                               = DX_D3DPERF_GetStatus                            @22
+D3DPERF_QueryRepeatFrame                        = DX_D3DPERF_QueryRepeatFrame                     @23
+D3DPERF_SetMarker                               = DX_D3DPERF_SetMarker                            @24
+D3DPERF_SetOptions                              = DX_D3DPERF_SetOptions                           @25
+D3DPERF_SetRegion                               = DX_D3DPERF_SetRegion                            @26
+DebugSetLevel                                   = DX_DebugSetLevel                                @27
+DebugSetMute                                    = DX_DebugSetMute                                 @28
+Direct3D9EnableMaximizedWindowedModeShim        = DX_Direct3D9EnableMaximizedWindowedModeShim     @29
+Direct3DCreate9                                 = DX_Direct3DCreate9                              @30
+Direct3DCreate9Ex                               = DX_Direct3DCreate9Ex                            @31
+Direct3DShaderValidatorCreate9                  = DX_Direct3DShaderValidatorCreate9               @17
+PSGPError                                       = DX_PSGPError                                    @18
+PSGPSampleTexture                               = DX_PSGPSampleTexture                            @19

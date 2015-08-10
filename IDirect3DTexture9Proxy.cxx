@@ -1,9 +1,9 @@
 #include "IDirect3DTexture9Proxy.hxx"
+#include <d3dx9.h>
+#include <fstream>
+#include "Math.hxx"
 
-IDirect3DTexture9Proxy::IDirect3DTexture9Proxy(IDirect3DTexture9* pOriginal)
-{
-    this->pOriginal = pOriginal;
-}
+IDirect3DTexture9Proxy::IDirect3DTexture9Proxy(IDirect3DTexture9* pOriginal, std::uint32_t Width, std::uint32_t Height, D3DFORMAT Format) : pOriginal(pOriginal), ID(0), Width(Width), Height(Height), Format(Format) {}
 
 IDirect3DTexture9Proxy::~IDirect3DTexture9Proxy() {}
 
@@ -34,7 +34,7 @@ HRESULT IDirect3DTexture9Proxy::GetDevice(IDirect3DDevice9** ppDevice)
     return pOriginal->GetDevice(ppDevice);
 }
 
-HRESULT IDirect3DTexture9Proxy::SetPrivateData(REFGUID refguid, CONST void* pData, DWORD SizeOfData, DWORD Flags)
+HRESULT IDirect3DTexture9Proxy::SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags)
 {
     return pOriginal->SetPrivateData(refguid, pData, SizeOfData, Flags);
 }
@@ -109,17 +109,40 @@ HRESULT IDirect3DTexture9Proxy::GetSurfaceLevel(UINT Level, IDirect3DSurface9** 
     return pOriginal->GetSurfaceLevel(Level, ppSurfaceLevel);
 }
 
-HRESULT IDirect3DTexture9Proxy::LockRect(UINT Level, D3DLOCKED_RECT* pLockedRect, CONST RECT* pRect, DWORD Flags)
+HRESULT IDirect3DTexture9Proxy::LockRect(UINT Level, D3DLOCKED_RECT* pLockedRect, const RECT* pRect, DWORD Flags)
 {
     return pOriginal->LockRect(Level, pLockedRect, pRect, Flags);
 }
 
 HRESULT IDirect3DTexture9Proxy::UnlockRect(UINT Level)
 {
-    return pOriginal->UnlockRect(Level);
+    HRESULT res = pOriginal->UnlockRect(Level);
+
+    if (this->Width && this->Height)
+    {
+        D3DLOCKED_RECT lock;
+        pOriginal->LockRect(0, &lock, nullptr, D3DLOCK_NOOVERWRITE | D3DLOCK_READONLY);
+        this->ID = GVMath::ColourChecksum(lock.pBits, this->Width, this->Height);
+        this->FID = GVMath::FullColourChecksum(lock.pBits, this->Width, this->Height);
+        pOriginal->UnlockRect(0);
+    }
+
+    return res;
 }
 
-HRESULT IDirect3DTexture9Proxy::AddDirtyRect(CONST RECT* pDirtyRect)
+HRESULT IDirect3DTexture9Proxy::AddDirtyRect(const RECT* pDirtyRect)
 {
     return pOriginal->AddDirtyRect(pDirtyRect);
+}
+
+void IDirect3DTexture9Proxy::Save()
+{
+    D3DLOCKED_RECT lock;
+    if (pOriginal->LockRect(0, &lock, nullptr, D3DLOCK_READONLY) == D3D_OK)
+    {
+        char buff[256] = {0};
+        sprintf(buff, "C:/Users/Kira/Desktop/Textures/%u.bmp", this->ID);
+        Image{lock.pBits, Width, Height}.Save(buff);
+        pOriginal->UnlockRect(0);
+    }
 }

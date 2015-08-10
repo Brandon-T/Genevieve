@@ -32,7 +32,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/Genevieve" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/d3d9" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -54,11 +54,13 @@
 					<Add option="-Wl,--enable-stdcall-fixup" />
 					<Add option="-Wl,--kill-at -d --input-def libGenevieve.def" />
 					<Add library="user32" />
-					<Add library="d3dx9" />
 					<Add library="gdi32" />
+					<Add library="d3dx9" />
 				</Linker>
 			</Target>
 		</Build>
+		<Unit filename="Communication.cxx" />
+		<Unit filename="Communication.hxx" />
 		<Unit filename="Console.cxx" />
 		<Unit filename="Console.hxx" />
 		<Unit filename="Export.cxx" />
@@ -71,13 +73,23 @@
 		<Unit filename="IDirect3DBaseTexture9Proxy.hxx" />
 		<Unit filename="IDirect3DDevice9Proxy.cxx" />
 		<Unit filename="IDirect3DDevice9Proxy.hxx" />
+		<Unit filename="IDirect3DDevice9ProxyHook.cxx" />
+		<Unit filename="IDirect3DDevice9ProxyHook.hxx" />
+		<Unit filename="IDirect3DIndexBuffer9Proxy.cxx" />
+		<Unit filename="IDirect3DIndexBuffer9Proxy.hxx" />
 		<Unit filename="IDirect3DSwapChain9Proxy.cxx" />
 		<Unit filename="IDirect3DSwapChain9Proxy.hxx" />
 		<Unit filename="IDirect3DTexture9Proxy.cxx" />
 		<Unit filename="IDirect3DTexture9Proxy.hxx" />
+		<Unit filename="IDirect3DVertexBuffer9Proxy.cxx" />
+		<Unit filename="IDirect3DVertexBuffer9Proxy.hxx" />
 		<Unit filename="Math.cxx" />
 		<Unit filename="Math.hxx" />
 		<Unit filename="Memory.hxx" />
+		<Unit filename="MemoryMap.cxx" />
+		<Unit filename="MemoryMap.hxx" />
+		<Unit filename="Plugin.cxx" />
+		<Unit filename="Plugin.hxx" />
 		<Unit filename="libGenevieve.def" />
 		<Unit filename="main.cxx" />
 		<Extensions>

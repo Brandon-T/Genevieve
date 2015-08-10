@@ -1,9 +1,6 @@
 #include "IDirect3DSwapChain9Proxy.hxx"
 
-IDirect3DSwapChain9Proxy::IDirect3DSwapChain9Proxy(IDirect3DSwapChain9* pOriginal)
-{
-    this->pOriginal = pOriginal;
-}
+IDirect3DSwapChain9Proxy::IDirect3DSwapChain9Proxy(IDirect3DSwapChain9* pOriginal) : pOriginal(pOriginal) {}
 
 IDirect3DSwapChain9Proxy::~IDirect3DSwapChain9Proxy() {}
 

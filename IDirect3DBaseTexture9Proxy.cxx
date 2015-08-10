@@ -1,9 +1,6 @@
 #include "IDirect3DBaseTexture9Proxy.hxx"
 
-IDirect3DBaseTexture9Proxy::IDirect3DBaseTexture9Proxy(IDirect3DBaseTexture9* pOriginal)
-{
-    this->pOriginal = pOriginal;
-}
+IDirect3DBaseTexture9Proxy::IDirect3DBaseTexture9Proxy(IDirect3DBaseTexture9* pOriginal) : pOriginal(pOriginal) {}
 
 IDirect3DBaseTexture9Proxy::~IDirect3DBaseTexture9Proxy() {}
 
@@ -34,7 +31,7 @@ HRESULT IDirect3DBaseTexture9Proxy::GetDevice(IDirect3DDevice9** ppDevice)
     return pOriginal->GetDevice(ppDevice);
 }
 
-HRESULT IDirect3DBaseTexture9Proxy::SetPrivateData(REFGUID refguid, CONST void* pData, DWORD SizeOfData, DWORD Flags)
+HRESULT IDirect3DBaseTexture9Proxy::SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags)
 {
     return pOriginal->SetPrivateData(refguid, pData, SizeOfData, Flags);
 }

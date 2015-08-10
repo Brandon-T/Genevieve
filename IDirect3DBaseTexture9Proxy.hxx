@@ -16,7 +16,7 @@ class IDirect3DBaseTexture9Proxy : public IDirect3DBaseTexture9
         ULONG    __stdcall AddRef();
         ULONG    __stdcall Release();
         HRESULT  __stdcall GetDevice(IDirect3DDevice9** ppDevice);
-        HRESULT  __stdcall SetPrivateData(REFGUID refguid, CONST void* pData, DWORD SizeOfData, DWORD Flags);
+        HRESULT  __stdcall SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags);
         HRESULT  __stdcall GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData);
         HRESULT  __stdcall FreePrivateData(REFGUID refguid);
         DWORD    __stdcall SetPriority(DWORD PriorityNew);
@@ -29,6 +29,8 @@ class IDirect3DBaseTexture9Proxy : public IDirect3DBaseTexture9
         HRESULT  __stdcall SetAutoGenFilterType(D3DTEXTUREFILTERTYPE FilterType);
         D3DTEXTUREFILTERTYPE __stdcall GetAutoGenFilterType();
         void     __stdcall GenerateMipSubLevels();
+
+        IDirect3DBaseTexture9* Original() {return pOriginal;}
 };
 
 #endif // IDIRECT3DBASETEXTURE9PROXY_HXX_INCLUDED

@@ -46,6 +46,68 @@ Vec3 Vec3::operator / (const float val) const
     return Vec3(x / val, y / val, z / val);
 }
 
+Vec3 Vec3::Transform(Mat4* mat) const
+{
+    Vec3 res;
+    float normal = (*mat)[0][3] * x + (*mat)[1][3] * y + (*mat)[2][3] * z + (*mat)[3][3];
+    if (normal)
+    {
+        res.x = ((*mat)[0][0] * x + (*mat)[1][0] * y + (*mat)[2][0] * z + (*mat)[3][0]) / normal;
+        res.y = ((*mat)[0][1] * x + (*mat)[1][1] * y + (*mat)[2][1] * z + (*mat)[3][1]) / normal;
+        res.z = ((*mat)[0][2] * x + (*mat)[1][2] * y + (*mat)[2][2] * z + (*mat)[3][2]) / normal;
+    }
+    return res;
+}
+
+Vec3 Vec3::Transform(const Mat4 &mat) const
+{
+    Vec3 res;
+    float normal = mat[0][3] * x + mat[1][3] * y + mat[2][3] * z + mat[3][3];
+    if (normal)
+    {
+        res.x = (mat[0][0] * x + mat[1][0] * y + mat[2][0] * z + mat[3][0]) / normal;
+        res.y = (mat[0][1] * x + mat[1][1] * y + mat[2][1] * z + mat[3][1]) / normal;
+        res.z = (mat[0][2] * x + mat[1][2] * y + mat[2][2] * z + mat[3][2]) / normal;
+    }
+    return res;
+}
+
+Vec3 Vec3::Project(D3DVIEWPORT9* viewport, Mat4* world, Mat4* view, Mat4* projection) const
+{
+    for (short i = 0; i < 4; ++i)
+    {
+        for (short j = 0; j < 4; ++j)
+        {
+            (*world)[i][j] = (*world)[i][0] * (*view)[0][j] + (*world)[i][1] * (*view)[1][j] + (*world)[i][2] * (*view)[2][j] + (*world)[i][3] * (*view)[3][j];
+        }
+    }
+
+    for (short i = 0; i < 4; ++i)
+    {
+        for (short j = 0; j < 4; ++j)
+        {
+            (*world)[i][j] = (*world)[i][0] * (*projection)[0][j] + (*world)[i][1] * (*projection)[1][j] + (*world)[i][2] * (*projection)[2][j] + (*world)[i][3] * (*projection)[3][j];
+        }
+    }
+
+    Vec3 res = this->Transform(world);
+    res.x = viewport->X + (1.0f + res.x) * viewport->Width / 2.0f;
+    res.y = viewport->Y + (1.0f - res.y) * viewport->Height / 2.0f;
+    res.z = viewport->MinZ + res.z * (viewport->MaxZ - viewport->MinZ);
+    return res;
+}
+
+Vec3 Vec3::Project(const D3DVIEWPORT9 &viewport, const Mat4 &world, const Mat4 &view, const Mat4 &projection) const
+{
+    Mat4 wv = world * view;
+    Mat4 wvp = wv * projection;
+    Vec3 res = this->Transform(wvp);
+    res.x = viewport.X + (1.0f + res.x) * viewport.Width / 2.0f;
+    res.y = viewport.Y + (1.0f - res.y) * viewport.Height / 2.0f;
+    res.z = viewport.MinZ + res.z * (viewport.MaxZ - viewport.MinZ);
+    return res;
+}
+
 
 Mat4 Mat4::operator * (const Mat4 &m) const
 {
@@ -54,12 +116,15 @@ Mat4 Mat4::operator * (const Mat4 &m) const
     {
         for (short j = 0; j < 4; ++j)
         {
-            float sum = 0.0f;
+            //#error come back..
+            /*float sum = 0.0f;
             for (short k = 0; k < 4; ++k)
             {
                 sum += mat[i][k] * res[k][j];
             }
-            res[i][j] = sum;
+            res[i][j] = sum;*/
+
+            res[i][j] = mat[i][0] * m[0][j] + mat[i][1] * m[1][j] + mat[i][2] * m[2][j] + mat[i][3] * m[3][j];
         }
     }
     return res;
@@ -89,6 +154,18 @@ Mat4 Mat4::operator - (const Mat4 &m) const
         }
     }
     return res;
+}
+
+Mat4& Mat4::Transpose()
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 4; ++j)
+        {
+            mat[j][i] = mat[i][j];
+        }
+    }
+    return *this;
 }
 
 Mat4 Mat4::Transpose() const
@@ -241,9 +318,89 @@ Mat4 Mat4::Translate(float x, float y, float z)
     return res;
 }
 
+namespace DXMath
+{
+    unsigned int CalculateStride(unsigned int FVF)
+    {
+        return ((FVF | D3DFVF_XYZ) == FVF) * 12 +
+               ((FVF | D3DFVF_XYZRHW) == FVF) * 12 +
+               ((FVF | D3DFVF_XYZB1) == FVF) * 12 +
+               ((FVF | D3DFVF_XYZB2) == FVF) * 12 +
+               ((FVF | D3DFVF_XYZB3) == FVF) * 12 +
+               ((FVF | D3DFVF_XYZB4) == FVF) * 12 +
+               ((FVF | D3DFVF_XYZB5) == FVF) * 12 +
+               ((FVF | D3DFVF_XYZW) == FVF) * 12 +
+               ((FVF | D3DFVF_NORMAL) == FVF) * 12 +
+               ((FVF | D3DFVF_DIFFUSE) == FVF) * 4  +
+               ((FVF | D3DFVF_SPECULAR) == FVF) * 4  +
+               ((FVF | D3DFVF_TEX1) == FVF) * 8  +
+               ((FVF | D3DFVF_TEX2) == FVF) * 8  +
+               ((FVF | D3DFVF_TEX3) == FVF) * 8  +
+               ((FVF | D3DFVF_TEX4) == FVF) * 8  +
+               ((FVF | D3DFVF_TEX5) == FVF) * 8  +
+               ((FVF | D3DFVF_TEX6) == FVF) * 8  +
+               ((FVF | D3DFVF_TEX7) == FVF) * 8  +
+               ((FVF | D3DFVF_TEX8) == FVF) * 8;
+    }
+
+    unsigned int CalculateBitsPerPixel(D3DFORMAT format)
+    {
+        switch(format)
+        {
+            case D3DFMT_A16B16G16R16: return 64;
+            case D3DFMT_A8R8G8B8: return 32;
+            case D3DFMT_X8R8G8B8: return 32;
+            case D3DFMT_A2B10G10R10: return 32;
+            case D3DFMT_A8B8G8R8: return 32;
+            case D3DFMT_X8B8G8R8: return 32;
+            case D3DFMT_G16R16: return 32;
+            case D3DFMT_A2R10G10B10: return 32;
+            case D3DFMT_R8G8B8: return 24;
+            case D3DFMT_R5G6B5: return 16;
+            case D3DFMT_X1R5G5B5: return 16;
+            case D3DFMT_A1R5G5B5: return 16;
+            case D3DFMT_A4R4G4B4: return 16;
+            case D3DFMT_A8R3G3B2: return 16;
+            case D3DFMT_X4R4G4B4: return 16;
+            case D3DFMT_A8P8: return 8;
+            case D3DFMT_R3G3B2: return 8;
+            case D3DFMT_A8: return 8;
+            default: return 8;
+        }
+    }
+
+    #ifdef D3DX_SUPPORT
+    D3DXVECTOR3 WorldToScreen(D3DXMATRIX* WorldViewProjection, D3DVIEWPORT9* ViewPort, const D3DXVECTOR3 &in)
+    {
+        D3DXVECTOR3 out;
+        D3DXMatrixTranspose(WorldViewProjection, WorldViewProjection);
+        D3DXVec3TransformCoord(&out, &in, WorldViewProjection);
+        return D3DXVECTOR3((out.x + 1.0f) * ViewPort->Width * 0.5f + ViewPort->X, (1.0f - out.y) * ViewPort->Height * 0.5f + ViewPort->Y, out.z);
+    }
+
+    D3DXVECTOR3 WorldToScreen2(D3DVIEWPORT9* ViewPort, D3DXMATRIX* World, D3DXMATRIX* View, D3DXMATRIX* Projection, const D3DXVECTOR3 &in)
+    {
+        D3DXVECTOR3 out;
+        D3DXVec3Project(&out, &in, ViewPort, Projection, View, World);
+        return out;
+    }
+    #else
+    Vec3 WorldToScreen(Mat4* WorldViewProjection, D3DVIEWPORT9* ViewPort, const Vec3 &in)
+    {
+        Vec3 out = in.Transform(WorldViewProjection->Transpose());
+        return Vec3{(out.x + 1.0f) * ViewPort->Width * 0.5f + ViewPort->X, (1.0f - out.y) * ViewPort->Height * 0.5f + ViewPort->Y, out.z};
+    }
+
+    Vec3 WorldToScreen2(D3DVIEWPORT9* ViewPort, Mat4* World, Mat4* View, Mat4* Projection, const Vec3 &in)
+    {
+        return in.Project(ViewPort, World, View, Projection);
+    }
+    #endif // D3DX_SUPPORT
+}
+
 namespace GVMath
 {
-    Vec3 GetEulerAngles(float mat[16], bool rowmajor)
+    Vec3 GetEulerAngles(float (&mat)[16], bool rowmajor)
     {
         if (rowmajor)
         {
@@ -261,7 +418,7 @@ namespace GVMath
         }
     }
 
-    Vec3 GetEulerAngles(float mat[4][4], bool rowmajor)
+    Vec3 GetEulerAngles(float (&mat)[4][4], bool rowmajor)
     {
         if (rowmajor)
         {
@@ -279,7 +436,62 @@ namespace GVMath
         }
     }
 
-    std::uint32_t Adler32(std::uint8_t* data, std::size_t size)
+    float Distance(float (&a)[2], float (&b)[2])
+    {
+        float x = a[0] - b[0];
+        float y = a[1] - b[1];
+        return sqrt((x * x) + (y * y));
+    }
+
+    float Distance(float (&a)[3], float (&b)[3])
+    {
+        float x = a[0] - b[0];
+        float y = a[1] - b[1];
+        float z = a[2] - b[2];
+        return sqrt((x * x) + (y * y) + (z * z));
+    }
+
+    Box2D BoundingBox(float* x, float* y, std::size_t size)
+    {
+        auto xtreme = std::minmax_element(x, x + size, [](const float lhs, const float rhs) {return lhs < rhs;});
+        auto ytreme = std::minmax_element(y, y + size, [](const float lhs, const float rhs) {return lhs < rhs;});
+        return {*xtreme.first, *ytreme.first, *xtreme.second, *ytreme.second};
+    }
+
+    Box3D BoundingBox(float* x, float* y, float* z, std::size_t size)
+    {
+        auto xtreme = std::minmax_element(x, x + size, [](const float lhs, const float rhs) {return lhs < rhs;});
+        auto ytreme = std::minmax_element(y, y + size, [](const float lhs, const float rhs) {return lhs < rhs;});
+        auto ztreme = std::minmax_element(z, z + size, [](const float lhs, const float rhs) {return lhs < rhs;});
+        return {*xtreme.first, *ytreme.first, *ztreme.first, *xtreme.second, *ytreme.second, *ztreme.second};
+    }
+
+    std::uint32_t ColourChecksum(const void* data, std::size_t width, std::size_t height)
+    {
+        return FullColourChecksum(data, width, height, height < 12 ? 0 : 12);
+    }
+
+    std::uint32_t FullColourChecksum(const void* data, std::size_t width, std::size_t height, std::size_t offset)
+    {
+        std::size_t k = 0;
+        std::uint32_t RSum = 0, GSum = 0, BSum = 0, ASum = 0;
+        const std::uint8_t* ptr = static_cast<const std::uint8_t*>(data);
+
+        for (std::size_t i = offset; i < height; ++i)
+        {
+            for (std::size_t j = 0; j < width; ++j, ++k)
+            {
+                RSum += *ptr++;
+                GSum += *ptr++;
+                BSum += *ptr++;
+                ASum += *ptr++;
+            }
+        }
+
+        return k != 0 ? RGB(RSum / k, GSum / k, BSum / k) : RGB(RSum, GSum, BSum);
+    }
+
+    std::uint32_t Adler32(const std::uint8_t* data, std::size_t size)
     {
         std::uint32_t a = 1, b = 0;
         for (std::size_t i = 0; i < size; ++i)
@@ -290,7 +502,7 @@ namespace GVMath
         return (b << 0x10) | a;
     }
 
-    std::uint32_t CRC32(void* Data, std::size_t Size, std::uint32_t InitialValue)
+    std::uint32_t CRC32(const void* data, std::size_t size, std::uint32_t InitialValue)
     {
         static const std::uint32_t LookUpTable[256] =
         {
@@ -360,14 +572,14 @@ namespace GVMath
             0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
         };
 
-        std::uint32_t CRC = ~InitialValue;
-        std::uint8_t* Pointer = static_cast<std::uint8_t*>(Data);
+        std::uint32_t crc = ~InitialValue;
+        const std::uint8_t* ptr = static_cast<const std::uint8_t*>(data);
 
-        for(std::size_t I = 0; I < Size; ++I)
+        for(std::size_t i = 0; i < size; ++i)
         {
-            CRC = LookUpTable[(CRC ^ *Pointer++) & 0xFF] ^ (CRC >> 8);
+            crc = LookUpTable[(crc ^ *ptr++) & 0xFF] ^ (crc >> 8);
         }
 
-        return ~CRC;
+        return ~crc;
     }
 }

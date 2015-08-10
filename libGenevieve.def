@@ -17,3 +17,5 @@ Direct3DCreate9Ex                               = DX_Direct3DCreate9Ex          
 Direct3DShaderValidatorCreate9                  = DX_Direct3DShaderValidatorCreate9               @17
 PSGPError                                       = DX_PSGPError                                    @18
 PSGPSampleTexture                               = DX_PSGPSampleTexture                            @19
+
+SMARTPluginInit                                                                                   @1024

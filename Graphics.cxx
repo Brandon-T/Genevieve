@@ -1,7 +1,7 @@
 #include "Graphics.hxx"
 
 
-#ifdef D3DX_SUPPORT
+//#ifdef D3DX_SUPPORT
 Font::Font(IDirect3DDevice9* pDevice, const char* name, unsigned short size) : fnt(nullptr), width(0), height(0)
 {
     /*HDC DC = nullptr;
@@ -13,7 +13,7 @@ Font::Font(IDirect3DDevice9* pDevice, const char* name, unsigned short size) : f
     rt->ReleaseDC(DC);*/
 
     HDC DC = GetDC(nullptr);
-    D3DXCreateFontA(pDevice, -MulDiv(size, GetDeviceCaps(DC, LOGPIXELSY), 72), 0, FW_NORMAL, 0, false, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, name, &fnt);
+    D3DXCreateFontA(pDevice, -MulDiv(size, GetDeviceCaps(DC, LOGPIXELSY), 72), 0, FW_NORMAL, 0, false, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_DONTCARE, name, &fnt);
     ReleaseDC(nullptr, DC);
 
     IDirect3D9* d3d = nullptr;
@@ -26,7 +26,107 @@ Font::Font(IDirect3DDevice9* pDevice, const char* name, unsigned short size) : f
     width = mode.Width;
     height = mode.Height;
 }
-#endif
+//#endif
+
+void Image::process_pixels(void* out, void* in)
+{
+    unsigned int i, j;
+    BGRA* pOut = (BGRA*)out;
+    unsigned char* pIn = (unsigned char*)in;
+
+    for (i = 0; i < height; ++i)
+    {
+        for (j = 0; j < width; ++j)
+        {
+            pOut[(height - 1 - i) * width + j].B = *(pIn++);
+            pOut[(height - 1 - i) * width + j].G = *(pIn++);
+            pOut[(height - 1 - i) * width + j].R = *(pIn++);
+            pOut[(height - 1 - i) * width + j].A = *(pIn++);
+        }
+    }
+}
+
+void Image::unprocess_pixels(void* out, void* in)
+{
+    unsigned int i, j;
+    unsigned char* pOut = (unsigned char*)out;
+    BGRA* pIn = (BGRA*)in;
+
+    for (i = 0; i < height; ++i)
+    {
+        for (j = 0; j < width; ++j)
+        {
+            *(pOut++) = pIn[(height - 1 - i) * width + j].B;
+            *(pOut++) = pIn[(height - 1 - i) * width + j].G;
+            *(pOut++) = pIn[(height - 1 - i) * width + j].R;
+            *(pOut++) = pIn[(height - 1 - i) * width + j].A;
+        }
+    }
+}
+
+Image::Image(void* pixels, unsigned int width, unsigned int height) : pixels(width > 0 && height > 0 ? malloc(((width * 32 + 31) / 32) * 4 * height) : nullptr), width(width > 0 ? width : 0), height(height > 0 ? height : 0)
+{
+    if (width > 0 && height > 0 && pixels)
+    {
+        process_pixels(this->pixels, pixels);
+    }
+}
+
+bool Image::Save(const char* path)
+{
+    FILE* file = fopen(path, "wb");
+
+    if (file)
+    {
+        unsigned short bpp = 32;
+        unsigned int trash = 0;
+        unsigned short planes = 1;
+        unsigned int biSize = 108;
+        unsigned int offset = 122;
+        unsigned int compression = 3;
+        unsigned short type = 0x4D42;
+        unsigned int size = ((width * bpp + 31) / 32) * 4 * height;
+        unsigned int bfSize = offset + size;
+        unsigned int masks[4] = {0xFF0000, 0xFF00, 0xFF, 0xFF000000};
+        unsigned int csType = 0x73524742;
+        unsigned int epts[9] = {0};
+
+        fwrite(&type, sizeof(type), 1, file);
+        fwrite(&bfSize, sizeof(bfSize), 1, file);
+        fwrite(&trash, sizeof(trash), 1, file);
+        fwrite(&offset, sizeof(offset), 1, file);
+        fwrite(&biSize, sizeof(biSize), 1, file);
+        fwrite(&width, sizeof(width), 1, file);
+        fwrite(&height, sizeof(height), 1, file);
+        fwrite(&planes, sizeof(planes), 1, file);
+        fwrite(&bpp, sizeof(bpp), 1, file);
+        fwrite(&compression, sizeof(compression), 1, file);
+        fwrite(&size, sizeof(size), 1, file);
+        fwrite(&trash, sizeof(trash), 1, file);
+        fwrite(&trash, sizeof(trash), 1, file);
+        fwrite(&trash, sizeof(trash), 1, file);
+        fwrite(&trash, sizeof(trash), 1, file);
+        fwrite(&masks, sizeof(masks), 1, file);
+        fwrite(&csType, sizeof(csType), 1, file);
+        fwrite(&epts, sizeof(epts), 1, file);
+        fwrite(&epts, sizeof(trash), 1, file);
+        fwrite(&epts, sizeof(trash), 1, file);
+        fwrite(&epts, sizeof(trash), 1, file);
+
+        void* buffer = malloc(size);
+        if (!buffer)
+        {
+            perror("Memory allocation failure.");
+            return false;
+        }
+
+        unprocess_pixels(buffer, pixels);
+        fwrite(pixels, 1, size, file);
+        free(buffer);
+        return true;
+    }
+    return false;
+}
 
 #ifdef D3DX_SUPPORT
 Texture::Texture(IDirect3DDevice9* pDevice, const char* path, const D3DCOLOR colourkey) : tex(nullptr), pDevice(pDevice)
@@ -102,3 +202,22 @@ void Sprite::Draw(IDirect3DTexture9* tex, D3DXVECTOR3* pos, const D3DCOLOR tint)
     spr->End();
 }
 #endif
+
+void Graphics::DrawCircle(float X, float Y, float Radius, D3DCOLOR Colour, int Resolution)
+{
+    D3DVertex Vertices[Resolution];
+
+    for (int I = 0; I < Resolution; ++I)
+    {
+        Vertices[I].X = X + Radius * std::cos(3.141592654f * (I / (Resolution / 2.0f)));
+        Vertices[I].Y = Y + Radius * std::sin(3.141592654f * (I / (Resolution / 2.0f)));
+        Vertices[I].Z = 0.0f;
+        Vertices[I].RHW = 1.0f;
+        Vertices[I].Colour = Colour;
+        Vertices[I].U = 0.0f;
+        Vertices[I].V = 0.0f;
+    }
+
+    pDevice->SetFVF(VERTEX_FVF_TEX);
+    pDevice->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, Resolution - 2, Vertices, sizeof(D3DVertex));
+}

@@ -2,12 +2,11 @@
 #define IDIRECT3D9PROXY_HXX_INCLUDED
 
 #include <d3d9.h>
-#include "IDirect3DDevice9Proxy.hxx"
 
 class IDirect3D9Proxy : public IDirect3D9
 {
     private:
-        IDirect3D9* ptr_IDirect3D9;
+        IDirect3D9* pOriginal;
 
     public:
         IDirect3D9Proxy(IDirect3D9* pOriginal);

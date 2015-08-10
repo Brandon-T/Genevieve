@@ -1,13 +1,12 @@
 #ifndef GRAPHICS_HXX_INCLUDED
 #define GRAPHICS_HXX_INCLUDED
 
-#define D3DX_SUPPORT
-
 #include <d3d9.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include <utility>
+#include <cmath>
 
 #ifdef D3DX_SUPPORT
 #include <d3dx9.h>
@@ -18,17 +17,29 @@
 #define VERTEX_FVF (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
 #define VERTEX_FVF_TEX (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 
-typedef union
+typedef union BGRA
 {
-    std::uint8_t B, G, R, A;
+    struct {std::uint8_t B, G, R, A;};
     std::uint32_t Colour;
-} BGRA;
+} *PBGRA;
 
-typedef union
+typedef union RGBA
 {
-    std::uint8_t R, G, B, A;
+    struct {std::uint8_t R, G, B, A;};
     std::uint32_t Colour;
-} RGBA;
+} *PRGBA;
+
+typedef union ARGB
+{
+    struct{std::uint8_t A, R, G, B;};
+    std::uint32_t Colour;
+} *PARGB;
+
+typedef union ABGR
+{
+    struct {std::uint8_t A, B, G, R;};
+    std::uint32_t Colour;
+} *PABGR;
 
 typedef struct
 {
@@ -51,7 +62,8 @@ public:
     inline IDirect3DStateBlock9* operator()() const {return blk;}
 };
 
-#ifdef D3DX_SUPPORT
+//#ifdef D3DX_SUPPORT
+#include <d3dx9.h>
 class Font
 {
 private:
@@ -78,7 +90,7 @@ public:
 template<typename... Args>
 void Font::Draw(float X, float Y, const char* Text, Args... args)
 {
-    Print(X, Y, 0xFFFFFFFF, Text, std::forward<Args>(args)...);
+    Draw(X, Y, 0xFFFFFFFF, Text, std::forward<Args>(args)...);
 }
 
 template<typename... Args>
@@ -97,11 +109,31 @@ void Font::Draw(float X, float Y, const D3DCOLOR colour, const char* Text, Args.
         }
     }
 
-    RECT rect = {X, Y, width, height};
-	fnt->DrawTextA(NULL, Container.c_str(), -1, &rect, DT_LEFT | DT_VCENTER | DT_CALCRECT, colour);
+    RECT rect = {(long)X, (long)Y, width, height};
+	SetRect(&rect, X, Y, X + 500, Y + 20);
 	fnt->DrawTextA(NULL, Container.c_str(), -1, &rect, DT_LEFT | DT_VCENTER, colour);
 }
-#endif
+//#endif
+
+class Image
+{
+private:
+    void* pixels;
+    unsigned int width, height;
+    void process_pixels(void* out, void* in);
+    void unprocess_pixels(void* out, void* in);
+
+public:
+    Image() : pixels(nullptr), width(0), height(0) {}
+    Image(void* pixels, unsigned int width, unsigned int height);
+    ~Image() {free(pixels); pixels = nullptr;}
+
+    Image(const Image &other) = delete;
+    Image(Image &&other) = delete;
+    Image& operator = (const Image &other) = delete;
+
+    bool Save(const char* path);
+};
 
 class Texture
 {
@@ -120,8 +152,8 @@ public:
 
     inline IDirect3DTexture9* operator()() const {return tex;}
     std::uint8_t* Lock();
-    inline void Unlock();
-    inline void GetDescription(D3DSURFACE_DESC* desc);
+    void Unlock();
+    void GetDescription(D3DSURFACE_DESC* desc);
 
     void Draw(float X1, float Y1, float X2, float Y2);
 };
@@ -149,7 +181,14 @@ public:
 
 class Graphics
 {
+private:
+    IDirect3DDevice9* pDevice;
 
+public:
+    Graphics(IDirect3DDevice9* pDevice) : pDevice(pDevice) {}
+    ~Graphics() {}
+
+    void DrawCircle(float X, float Y, float Radius, D3DCOLOR Colour, int Resolution = 10);
 };
 
 #endif // GRAPHICS_HXX_INCLUDED

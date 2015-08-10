@@ -1,0 +1,241 @@
+# depslib dependency file v1.0
+1412814897 source:c:\users\kira\desktop\genevieve\console.cxx
+	"Console.hxx"
+
+1412815075 c:\users\kira\desktop\genevieve\console.hxx
+	<iostream>
+	<windows.h>
+	<fstream>
+	<streambuf>
+
+1412816377 source:c:\users\kira\desktop\genevieve\export.cxx
+	"Export.hxx"
+
+1412816389 c:\users\kira\desktop\genevieve\export.hxx
+	"Memory.hxx"
+	"IDirect3D9Proxy.hxx"
+	<windows.h>
+	<memory>
+	<d3d9.h>
+
+1412793026 c:\users\kira\desktop\genevieve\memory.hxx
+	<windows.h>
+	<string>
+	<stdexcept>
+
+1425713641 c:\users\kira\desktop\genevieve\idirect3d9proxy.hxx
+	<d3d9.h>
+	"IDirect3DDevice9Proxy.hxx"
+
+1425751230 c:\users\kira\desktop\genevieve\idirect3ddevice9proxy.hxx
+	<d3d9.h>
+	"IDirect3DTexture9Proxy.hxx"
+	"IDirect3DSwapChain9Proxy.hxx"
+	"IDirect3DBaseTexture9Proxy.hxx"
+
+1425756045 c:\users\kira\desktop\genevieve\idirect3dtexture9proxy.hxx
+	<d3d9.h>
+
+1425714877 c:\users\kira\desktop\genevieve\idirect3dswapchain9proxy.hxx
+	<d3d9.h>
+
+1425755892 c:\users\kira\desktop\genevieve\idirect3dbasetexture9proxy.hxx
+	<d3d9.h>
+
+1412556982 source:c:\users\kira\desktop\genevieve\graphics.cxx
+	"Graphics.hxx"
+
+1412557008 c:\users\kira\desktop\genevieve\graphics.hxx
+	<d3d9.h>
+	<cstdint>
+	<string>
+	<vector>
+	<utility>
+	<d3dx9.h>
+
+1412574824 source:c:\users\kira\desktop\genevieve\idirect3d9proxy.cxx
+	"IDirect3D9Proxy.hxx"
+
+1425751481 source:c:\users\kira\desktop\genevieve\idirect3dbasetexture9proxy.cxx
+	"IDirect3DBaseTexture9Proxy.hxx"
+
+1425714988 source:c:\users\kira\desktop\genevieve\idirect3dswapchain9proxy.cxx
+	"IDirect3DSwapChain9Proxy.hxx"
+
+1425755916 source:c:\users\kira\desktop\genevieve\idirect3dtexture9proxy.cxx
+	"IDirect3DTexture9Proxy.hxx"
+
+1418433935 source:c:\users\kira\desktop\genevieve\main.cxx
+	"Memory.hxx"
+	"Graphics.hxx"
+	"Math.hxx"
+	"Export.hxx"
+	<fstream>
+	<memory>
+
+1412571564 c:\users\kira\desktop\genevieve\math.hxx
+	<cmath>
+	<cstdint>
+	<algorithm>
+
+1412575520 source:c:\users\kira\desktop\genevieve\math.cxx
+	"Math.hxx"
+
+1431193024 source:c:\users\kira\desktop\genevieve\idirect3ddevice9proxy.cxx
+	"IDirect3DDevice9Proxy.hxx"
+	"Memory.hxx"
+	"Graphics.hxx"
+	"Math.hxx"
+	"Export.hxx"
+	<fstream>
+	<memory>
+
+1412814897 source:c:\users\kira\desktop\handles\genevieve\console.cxx
+	"Console.hxx"
+
+1412815075 c:\users\kira\desktop\handles\genevieve\console.hxx
+	<iostream>
+	<windows.h>
+	<fstream>
+	<streambuf>
+
+1412816377 source:c:\users\kira\desktop\handles\genevieve\export.cxx
+	"Export.hxx"
+
+1412816389 c:\users\kira\desktop\handles\genevieve\export.hxx
+	"Memory.hxx"
+	"IDirect3D9Proxy.hxx"
+	<windows.h>
+	<memory>
+	<d3d9.h>
+
+1433031771 c:\users\kira\desktop\handles\genevieve\memory.hxx
+	<windows.h>
+	<string>
+	<stdexcept>
+
+1432437927 c:\users\kira\desktop\handles\genevieve\idirect3d9proxy.hxx
+	<d3d9.h>
+
+1432440012 c:\users\kira\desktop\handles\genevieve\idirect3ddevice9proxy.hxx
+	<d3d9.h>
+
+1439089879 c:\users\kira\desktop\handles\genevieve\idirect3dtexture9proxy.hxx
+	<d3d9.h>
+	<cstdint>
+	"Graphics.hxx"
+	"Math.hxx"
+
+1425714877 c:\users\kira\desktop\handles\genevieve\idirect3dswapchain9proxy.hxx
+	<d3d9.h>
+
+1432400003 c:\users\kira\desktop\handles\genevieve\idirect3dbasetexture9proxy.hxx
+	<d3d9.h>
+
+1439096120 source:c:\users\kira\desktop\handles\genevieve\graphics.cxx
+	"Graphics.hxx"
+
+1439096064 c:\users\kira\desktop\handles\genevieve\graphics.hxx
+	<d3d9.h>
+	<cstdint>
+	<string>
+	<vector>
+	<utility>
+	<cmath>
+	<d3dx9.h>
+	<d3dx9.h>
+
+1432439929 source:c:\users\kira\desktop\handles\genevieve\idirect3d9proxy.cxx
+	"IDirect3D9Proxy.hxx"
+	"IDirect3DDevice9ProxyHook.hxx"
+
+1432400003 source:c:\users\kira\desktop\handles\genevieve\idirect3dbasetexture9proxy.cxx
+	"IDirect3DBaseTexture9Proxy.hxx"
+
+1432008470 source:c:\users\kira\desktop\handles\genevieve\idirect3dswapchain9proxy.cxx
+	"IDirect3DSwapChain9Proxy.hxx"
+
+1431232846 source:c:\users\kira\desktop\handles\genevieve\main.cxx
+	"Memory.hxx"
+	"Graphics.hxx"
+	"Math.hxx"
+	"Export.hxx"
+	<fstream>
+	<memory>
+
+1433605940 c:\users\kira\desktop\handles\genevieve\math.hxx
+	<cmath>
+	<cstdint>
+	<algorithm>
+	<d3dx9.h>
+
+1433605988 source:c:\users\kira\desktop\handles\genevieve\math.cxx
+	"Math.hxx"
+
+1439097994 source:c:\users\kira\desktop\handles\genevieve\idirect3dtexture9proxy.cxx
+	"IDirect3DTexture9Proxy.hxx"
+	<d3dx9.h>
+	<fstream>
+	"Math.hxx"
+
+1432437948 source:c:\users\kira\desktop\handles\genevieve\idirect3ddevice9proxy.cxx
+	"IDirect3DDevice9Proxy.hxx"
+
+1439098396 source:c:\users\kira\desktop\handles\genevieve\idirect3dvertexbuffer9proxy.cxx
+	"IDirect3DVertexBuffer9Proxy.hxx"
+
+1439098417 c:\users\kira\desktop\handles\genevieve\idirect3dvertexbuffer9proxy.hxx
+	<d3d9.h>
+	<cstdint>
+	<vector>
+	"Math.hxx"
+	"IDirect3DIndexBuffer9Proxy.hxx"
+
+1439097637 source:c:\users\kira\desktop\handles\genevieve\idirect3dindexbuffer9proxy.cxx
+	"IDirect3DIndexBuffer9Proxy.hxx"
+
+1439098340 c:\users\kira\desktop\handles\genevieve\idirect3dindexbuffer9proxy.hxx
+	<d3d9.h>
+	<cstdint>
+	<vector>
+	"Math.hxx"
+
+1439098307 c:\users\kira\desktop\handles\genevieve\idirect3ddevice9proxyhook.hxx
+	"IDirect3DDevice9Proxy.hxx"
+	"IDirect3DTexture9Proxy.hxx"
+	"IDirect3DSwapChain9Proxy.hxx"
+	"IDirect3DIndexBuffer9Proxy.hxx"
+	"IDirect3DVertexBuffer9Proxy.hxx"
+	"Graphics.hxx"
+	"Math.hxx"
+	"Plugin.hxx"
+	"MemoryMap.hxx"
+	"Communication.hxx"
+	<memory>
+	<vector>
+
+1439098359 source:c:\users\kira\desktop\handles\genevieve\idirect3ddevice9proxyhook.cxx
+	"IDirect3DDevice9ProxyHook.hxx"
+
+1433598177 source:c:\users\kira\desktop\handles\genevieve\memorymap.cxx
+	"MemoryMap.hxx"
+
+1433031473 c:\users\kira\desktop\handles\genevieve\memorymap.hxx
+	<windows.h>
+	<istream>
+	<locale>
+	<codecvt>
+
+1433105500 source:c:\users\kira\desktop\handles\genevieve\plugin.cxx
+	"Plugin.hxx"
+
+1433104767 c:\users\kira\desktop\handles\genevieve\plugin.hxx
+	<d3d9.h>
+	"Graphics.hxx"
+
+1433607058 source:c:\users\kira\desktop\handles\genevieve\communication.cxx
+	"Communication.hxx"
+
+1433703459 c:\users\kira\desktop\handles\genevieve\communication.hxx
+	"MemoryMap.hxx"
+

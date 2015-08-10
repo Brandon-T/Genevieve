@@ -7,7 +7,7 @@
 #include <memory>
 
 
-D3DXVECTOR3 GetVertex(std::uint8_t *vertices, std::int16_t index, std::uint16_t stride)
+/*D3DXVECTOR3 GetVertex(std::uint8_t *vertices, std::int16_t index, std::uint16_t stride)
 {
     D3DXVECTOR3 res = {0};
     memcpy(&res.x, &vertices[index * stride], sizeof(float));
@@ -149,7 +149,7 @@ bool SaveTexture(IDirect3DDevice9* pDevice, const char* path)
         basetex->Release();
     }
     return false;
-}
+}*/
 
 __attribute__((constructor)) void __load()
 {
